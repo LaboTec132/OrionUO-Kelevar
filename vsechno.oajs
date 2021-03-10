@@ -1,0 +1,1767 @@
+function track_animal()
+ {
+    if (Player.WarMode(true))
+       {   
+        Orion.WarMode(false);               
+        Orion.Wait(100);     
+        Orion.CancelWaitGump();
+        var Gump;
+            Orion.UseSkill("Tracking");
+            Orion.Wait(400);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(1));              
+        }
+    else
+        {
+        Orion.CancelWaitGump();
+        var Gump;
+            Orion.UseSkill("Tracking");
+            Orion.Wait(400);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(1));
+        }    
+}
+
+function track_next()
+ {  
+        Orion.CancelWaitGump();
+        var Gump;
+            Orion.Wait(100);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(1000));              
+}
+
+function buy_artefakt()
+{      
+
+    var container = Orion.FindObject("runebook");
+    if (!container)
+    {
+        Orion.CharPrint(self, "42", "Oznac runebook");
+        Orion.AddObject("runebook");
+        Orion.Wait(100);
+        while (Orion.HaveTarget())
+        {
+            Orion.Wait(100);
+        }
+    }  
+
+    while(!Player.Dead())
+    {
+       if (Player.WarMode(true))       // port  1
+       {   
+        Orion.WarMode(false);               
+        Orion.Wait(100);   
+       }      
+        var Gump;
+            Orion.UseObject("runebook");
+            Orion.Wait(500);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(16));   // pozice v RB
+        Orion.Wait(10000);
+        Orion.Buy('artefakt', "", [500]); 
+        Orion.Wait(3000);
+        
+        if (Player.WarMode(true))       // port  2
+       {   
+        Orion.WarMode(false);               
+        Orion.Wait(100);  
+       }       
+        var Gump;
+            Orion.UseObject("runebook");
+            Orion.Wait(500);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(16));    // pozice v RB
+        Orion.Wait(10000);      
+        Orion.Buy('artefakt', "", [500]); 
+        Orion.Wait(590000);
+    }
+} 
+
+function posun_sacku()
+{
+    var container = Orion.FindObject("posun_sacek");
+    if (!container)
+    {
+        Orion.CharPrint(self, "42", "Oznac sacek kterej budes posouvat");
+        Orion.AddObject("posun_sacek"); 
+        Orion.Wait(100);
+        while (Orion.HaveTarget())
+        {
+            Orion.Wait(100);
+        }
+    }    
+    
+while(!Player.Dead())
+    {
+        if (Orion.GetDistance("posun_sacek") == 2|Orion.GetDistance("posun_sacek") == 1 )
+        {
+            Orion.DropHere("posun_sacek");
+            Orion.Say("dgdbs"); 
+        }
+        Orion.Wait(200);
+    }       
+}
+
+function Vykup_spec_regu_bez_uklidu()
+{ 
+    
+    while(!Player.Dead())
+    {
+            Orion.Buy('spec_regy', "", [500]);            
+            Orion.Wait(600000); 
+    }    
+}
+
+function Vykup_spec_regu_s_uklidem_do_banky()
+{
+    var container = Orion.FindObject("saceknaregy");
+    if (!container)
+    {
+        Orion.CharPrint(self, "42", "Oznac sacek na spec regy");
+        Orion.AddObject("saceknaregy");
+        Orion.Wait(100);
+        while (Orion.HaveTarget())
+        {
+            Orion.Wait(100);
+        }
+    }     
+    
+    while(!Player.Dead())
+    {
+            Orion.Buy('spec_regy', "", [500]);
+            Orion.Wait(2000);
+            
+            var list = Orion.FindList('spec_regy', backpack);
+            for (var i = 0; i < list.length; i++)
+            {      
+                Orion.MoveItem(list[i], 0, "saceknaregy");
+                Orion.Wait(700);
+            }
+            
+            Orion.Wait(580000); 
+    }    
+}
+
+function spoustec_invisky(){
+            Orion.Terminate('Invis_opakovacka');
+            Orion.Wait(200); 
+            Orion.Exec('Invis_opakovacka');
+}
+
+function Invis_opakovacka()
+{
+    while(!Player.Dead())
+    {
+            Orion.ClearJournal();
+            Orion.WaitTargetObject('self');             
+            Orion.Cast('Invisibility')
+            Orion.Wait(500);
+            Orion.WaitJournal('The spell fizzles', Orion.Now(), Orion.Now()+8000, 'My|Sys'); 
+            
+            
+            if (Orion.InJournal('The spell fizzles', 'My|Sys')) {                   
+                    Orion.Exec('spoustec_invisky');
+            }         
+
+            Orion.Wait(250000); 
+    }    
+}
+
+function in_corp()
+ {     
+    Orion.WaitTargetObject('cil');             
+    Orion.Say('In Corp') 
+}
+
+function rejuv()
+{
+
+			if (Orion.Count("0x0F09", "0x08A7") < 1)      // rejuv
+			{
+                if (Orion.Count("0x0F09", "0x0388") < 1)     // tmr
+                {
+                    Orion.Print("---- NEMAS TMR ----");           
+                    Orion.Terminate("rejuv");  
+                } 
+                Orion.Print("* DOSLY TMR *");
+                Orion.ClearJournal(); 
+                Orion.Say('.lektvar Total mana refresh potion'); 
+                Orion.Wait(800);                
+                if (Orion.InJournal("Nepotrebujes", "sys")){
+                Orion.CharPrint(self, "62", "---- Full HP ----");
+                Orion.ClearJournal(); 
+                Orion.Terminate("rejuv");  
+                }  
+            
+                if (Orion.InJournal("nemuzes pit", "sys")){
+                Orion.CharPrint(self, "52", "--- Jeste ne! ---");
+                Orion.ClearJournal(); 
+                Orion.Terminate("rejuv");  
+                } 
+            
+                Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');
+                Orion.Terminate("rejuv"); 
+            }
+            
+            Orion.ClearJournal();    
+            Orion.Wait(100);
+            Orion.Say(".lektvar Rejuvenation potion");
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("rejuv");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("rejuv");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
+
+function str_lahev()
+{
+
+			if (Orion.Count("0x0F09", "0x0000") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("str_lahev");  
+            }
+            
+            Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say('.lektvar Greater strength potion'); 
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("str_lahev");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("str_lahev");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
+
+function total_refresh_lahev()
+{
+
+		 if (Orion.Count("0x0F0B", "0x0000") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("total_refresh_lahev");  
+            }
+            
+            Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say('.lektvar total refresh potion'); 
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("total_refresh_lahev");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("total_refresh_lahev");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
+
+function prirodni_lijany()
+{
+    Orion.WaitTargetObject('cil'); 
+    Orion.Say("Vas Por Mani");     
+}
+
+function prirodni_moskyti()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say("Xen Mani");     
+}
+
+function prirodni_taming()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say("Por Corp Wis Vas");     
+}
+
+function prirodni_refresh()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say("In Por Mani");     
+}
+
+function zapaleni_ohne()
+{
+var maps = Orion.FindType("0x0DE1");
+{
+for (var r in maps) {
+    Orion.WarMode("off")
+    Orion.DropHere(maps[r],1);    
+    Orion.UseType('0x0DE1'); 
+    Orion.Wait(100);
+    Orion.UseType('0x0DE3','0x0000', 'ground')   
+       Orion.ClearJournal(); 
+       while (!Orion.InJournal("jsi ruce nad" , 'sys')) {
+                   Orion.UseType('0x0DE3','0x0000', 'ground') 
+                   Orion.Wait(500);
+       }    
+}
+}
+}
+
+function nasazeni_stitu_a_zbrane1()
+{
+    if (Player.Weight() > Player.MaxWeight() - 1)   
+       {
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");
+       Orion.CharPrint(self, "52", "****! PRETIZENI !****");  
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");               
+        }
+    else
+        {       
+       Orion.Equip('stit');
+       Orion.Wait(500);
+       Orion.Equip('zbran1');
+        }    
+}
+
+function oznaceni_stitu()
+{
+    Orion.AddObject('stit');
+    Orion.Print("*** Klikni na stit ***");
+}
+
+function oznaceni_zbrane1()
+{
+    Orion.AddObject('zbran1');
+    Orion.Print("*** Klikni na zbran1 ***");
+}
+
+function oznaceni_zbrane2()
+{
+    Orion.AddObject('zbran2');
+    Orion.Print("*** Klikni na zbran2 ***");
+}
+
+function nasazeni_zbrane1()
+{
+    if (Player.Weight() > Player.MaxWeight() - 1)   
+       {
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");
+       Orion.CharPrint(self, "52", "****! PRETIZENI !****");  
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");               
+        }
+    else
+        {       
+       Orion.Equip('zbran1');
+        }    
+}
+
+function nasazeni_zbrane2()
+{
+    if (Player.Weight() > Player.MaxWeight() - 1)   
+       {
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");
+       Orion.CharPrint(self, "52", "****! PRETIZENI !****");  
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");               
+        }
+    else
+        {      
+       Orion.Equip("zbran2")
+        }    
+}
+
+function nasazeni_luku()
+{
+    if (Player.Weight() > Player.MaxWeight() - 1)   
+       {
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");
+       Orion.CharPrint(self, "52", "****! PRETIZENI !****");  
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");               
+        }
+    else
+        {       
+       Orion.UseObject('luk');
+        }    
+}
+
+function oznaceni_luku()
+{
+    Orion.AddObject('luk');
+    Orion.Print("*** Klikni na luk ***");
+}
+
+function otevreni_runebooku()
+{
+    Orion.WarMode("off")
+    Orion.Wait(10);
+    Orion.UseObject('runebook');
+}
+
+function oznaceni_runebooku()
+{
+    Orion.AddObject('runebook');
+    Orion.Print("*** Klikni na runebook ***");
+}
+
+function stealth()
+{
+    Orion.WarMode("off")
+    Orion.Wait(10);
+    Orion.UseSkill('Stealth');
+}
+
+function hiding()
+{
+    Orion.WarMode("off")
+    Orion.Wait(10);
+    Orion.UseSkill('Hiding');
+}
+
+function pizza()
+{
+    Orion.Say('.jidlo pizza sunkova');
+}
+
+function skvarkac()
+{
+    Orion.Say('.jidlo skvarkovy chleb');
+}
+
+function protektor()
+{
+    Orion.Say('.protektor');
+}
+
+function berserker()
+{
+    Orion.Say('.berserker');
+}
+
+function nicitel()
+{
+    Orion.Say('.nicitel');
+}
+
+function lecitel()
+{
+    Orion.Say('.lecitel');
+}
+
+function recover_z_bile()
+{
+    var rightHandObj = Orion.ObjAtLayer("RightHand");
+    var leftHandObj = Orion.ObjAtLayer("LeftHand");
+    
+
+    Orion.Say("Vas An Nox Sanct");     
+    Orion.Wait(2000);
+    
+    if (rightHandObj)
+    {
+        Orion.Equip(rightHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+    if (leftHandObj)
+    {
+        Orion.Equip(leftHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+}
+
+function superaura_z_bile()
+{
+    Orion.Say('.svitek VUSQ');
+}
+
+function aura_z_bile()
+{
+    var rightHandObj = Orion.ObjAtLayer("RightHand");
+    var leftHandObj = Orion.ObjAtLayer("LeftHand");
+    
+
+    Orion.Say("Uus Lor Sanct");      
+    Orion.Wait(2150);
+    
+    if (rightHandObj)
+    {
+        Orion.Equip(rightHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+    if (leftHandObj)
+    {
+        Orion.Equip(leftHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+}
+
+function kouzlo_proti_nemrtvym()
+{
+    var rightHandObj = Orion.ObjAtLayer("RightHand");
+    var leftHandObj = Orion.ObjAtLayer("LeftHand");
+    
+
+    Orion.WaitTargetObject('cil'); 
+    Orion.Say("In Grav Corp");     
+    Orion.Wait(2300);
+    
+    if (rightHandObj)
+    {
+        Orion.Equip(rightHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+    if (leftHandObj)
+    {
+        Orion.Equip(leftHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+}
+
+function elem_energize_svitek()
+{
+    Orion.UseType('0x2262'); 
+}
+
+function elem_poison()
+{
+    Orion.WaitTargetObject('cil'); 
+    Orion.Say("Volam jed na nepritele");
+    Orion.Wait(500);
+    Orion.Equip("stit")
+}
+
+function elem_snizeni_ressistu()
+{
+    Orion.WaitTargetObject('cil'); 
+    Orion.Say("Rusim pomoc zivlu");
+    Orion.Wait(1000);
+    Orion.Equip("stit")
+}
+
+function elem_nahozeni_ressistu()
+{
+    Orion.Say("Volam pomoc proti zivlum");
+    Orion.Wait(500);
+    Orion.Equip("stit")
+}
+
+function elem_nahozeni_bonusu()
+{ 
+    Orion.Say("Volam elementy do svych rukou");
+    Orion.Wait(500);
+    Orion.Equip("stit")
+}
+
+function elem_tempest()
+{
+    Orion.Say("Volam hromy a blesky");
+    Orion.Wait(1000);
+    Orion.Equip("stit")
+}
+
+function elem_freeze()
+{
+    Orion.WaitTargetObject('cil'); 
+    Orion.Say("Volam mraz na nepritele");
+    Orion.Wait(500);
+    Orion.Equip("stit")
+}
+
+function meteor()
+{
+    Orion.WaitTargetObject('cil'); 
+    Orion.Cast("Meteor Swarm");
+}
+
+function per_freeze()
+{
+    Orion.ClearJournal();
+    Orion.WaitTargetObject('cil');
+    Orion.Say("Volam mraz na nepritele");
+    Orion.Wait(200);
+        if (Orion.InJournal("see the target", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_freeze');  
+        }
+        if (Orion.InJournal("neni v linii", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_freeze');  
+        }     
+        Orion.ClearJournal();
+        while (!Orion.InJournal("You hit", 'sys')) {
+            Orion.Wait(100);            
+        }
+    Orion.Exec("per_freeze")
+}
+
+function per_light()
+{
+    Orion.ClearJournal();
+    if (Orion.Count('0x1f4a') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek pog');             
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Lightning')
+        }
+    Orion.Wait(200);
+        if (Orion.InJournal("see the target", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_light');  
+        }
+        if (Orion.InJournal("neni v linii", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_light');  
+        }     
+        Orion.ClearJournal();
+        while (!Orion.InJournal("You hit", 'sys')) {
+            Orion.Wait(100);            
+        }
+    Orion.Exec("per_light")
+}
+
+function per_kvf()
+{
+    Orion.ClearJournal();
+    if (Orion.Count('0x1f5f') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek kvf');             
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Flame Strike')
+        }
+    Orion.Wait(200);
+        if (Orion.InJournal("see the target", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_kvf');  
+        }
+        if (Orion.InJournal("neni v linii", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_kvf');  
+        }     
+        Orion.ClearJournal();
+        while (!Orion.InJournal("You hit", 'sys')) {
+            Orion.Wait(100);            
+        }
+    Orion.Exec("per_kvf")
+}
+
+function per_pcw()
+{
+    Orion.ClearJournal();
+    if (Orion.Count('0x1F51') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek pcw');             
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Mind Blast')
+        }
+    Orion.Wait(200);
+        if (Orion.InJournal("see the target", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_pcw');  
+        }
+        if (Orion.InJournal("neni v linii", 'sys')) {
+        Orion.Print("****! VYPINAM !****");
+        Orion.Terminate('per_pcw');  
+        }     
+        Orion.ClearJournal();
+        while (!Orion.InJournal("You hit", 'sys')) {
+            Orion.Wait(100);            
+        }
+    Orion.Exec("per_pcw")
+}
+
+function gold_fish()
+{
+    Orion.Say('.jidlo golden fish');
+}
+
+function uspavani()
+{
+    Orion.WarMode("off")
+    Orion.Wait(10);
+    Orion.WaitTargetObject('cil');
+    Orion.UseSkill('Discordance');
+}
+
+function zamknout()
+{
+    Orion.Say('#odemknout');
+}
+
+function int_na_kone()
+{
+       Orion.WaitTargetObject('kun');       
+       Orion.Cast('Cunning')
+}
+
+function dispelfield()
+ {
+    if (Orion.Count('0x1f4e') > 1)
+       {       
+        Orion.UseType('0x1f4e');        
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")        
+       Orion.Cast('Dispel Field')
+        }    
+}
+
+function zrcadlo()
+ {
+    if (Orion.Count('0x1F50') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek ijs');        
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Magic Reflection')
+        }    
+}
+
+function gh_svitek()
+ {
+    if (Orion.Count('0x1f49') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek ivm');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Greater Heal')
+        }    
+}
+
+function cure()
+ {
+    if (Orion.Count('0x1f37') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek an');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Cure')
+        }    
+}
+
+function greater_cure()
+ {
+    if (Orion.Count('0x1f45') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek van');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Arch Cure')
+        }    
+}
+
+function bless()
+ {
+    if (Orion.Count('0x1f3d') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek rs');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Bless')
+        }    
+}
+
+function paralyze()
+ {
+    if (Orion.Count('0x1f52') > 1)
+       {
+        Orion.WaitTargetObject('cil');        
+        Orion.Say('.svitek aep');          
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('cil');       
+       Orion.Cast('Paralyze')
+        }    
+}
+
+function des_mani()
+ {
+    if (Orion.Count('0x1f34') > 1)
+       {
+        Orion.WaitTargetObject('cil');        
+        Orion.Say('.svitek dm');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('cil');       
+       Orion.Cast('Weaken')
+        }    
+}
+
+function dispel()
+ {
+    if (Orion.Count('0x1f55') > 1)
+       {
+        Orion.WaitTargetObject('cil');        
+        Orion.Say('.svitek ao');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('cil');       
+       Orion.Cast('Dispel')
+        }    
+}
+
+function harm()
+ {
+    if (Orion.Count('0x1f38') > 1)
+       {
+        Orion.WaitTargetObject('cil');        
+        Orion.Say('.svitek am');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('cil');       
+       Orion.Cast('Harm')
+        }    
+}
+
+function gh_svitek_na_cil()
+ {
+    if (Orion.Count('0x1f49') > 1)
+       {
+        Orion.WaitTargetObject('cil2');        
+        Orion.Say('.svitek ivm');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('cil2');       
+       Orion.Cast('Greater Heal')
+        }    
+}
+
+function paralyze_zed()
+ {
+    if (Orion.Count('0x1f5b') > 1)
+       {       
+        Orion.Say('.svitek ieg');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")      
+       Orion.Cast('Paralyze Field')
+        }    
+}
+
+function protekce()
+ {
+    if (Orion.Count('0x1f3b') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek us');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Protection')
+        }    
+}
+
+function reaktivko()
+ {
+    if (Orion.Count('0x1F2D') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek fs');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Reactive Armor')
+        }    
+}
+
+function protekce_a_reaktivko()
+ {
+    if (Orion.Count('0x1f3b') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek us'); 
+        Orion.Wait(1100);  
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Protection')
+       Orion.Wait(1700);  
+        } 
+
+    Orion.Wait(500);
+    
+    if (Orion.Count('0x1F2D') > 1)
+       {
+        Orion.WaitTargetObject('self');        
+        Orion.Say('.svitek fs');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY") 
+       Orion.WaitTargetObject('self');       
+       Orion.Cast('Reactive Armor')
+        } 
+}
+
+
+function stena()
+ {
+    if (Orion.Count('0x1f44') > 1)
+       {               
+        Orion.Say('.svitek isy');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")               
+       Orion.Cast('Wall of Stone')
+        }    
+}
+
+function magic_stena()
+ {
+    if (Orion.Count('0x1f5e') > 1)
+       {               
+        Orion.Say('.svitek isg');           
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")               
+       Orion.Cast('Energy Field')
+        }    
+}
+
+function sipka()
+{      
+       Orion.WaitTargetObject('self');         
+       Orion.Cast('Magic Arrow')
+}
+
+function invis_port()
+{      
+       Orion.Say('.lektvar Invisibility potion');
+       Orion.WaitTargetObject('portruna');         
+       Orion.Say('.svitek kop')
+}
+
+function oznaceni_runy_na_invisport()
+{
+    Orion.AddObject('portruna');
+    Orion.Print("*** Klikni na runu ***");
+}
+
+function strength()
+ {
+    if (Orion.Count('0x1f3c') > 1)
+       { 
+        Orion.WaitTargetObject('self');              
+        Orion.Say('.svitek um');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('self');             
+       Orion.Cast('Strength')
+        }    
+}
+
+function reveal()
+ {
+    if (Orion.Count('0x1f5c') > 1)
+       { 
+        Orion.WaitTargetObject('self');              
+        Orion.Say('.svitek wq');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('self');             
+       Orion.Cast('Reveal')
+        }    
+}
+
+function invis_kouzlo()
+ {
+    if (Orion.Count('0x1f58') > 1)
+       { 
+        Orion.WaitTargetObject('self');              
+        Orion.Say('.svitek alx');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('self');             
+       Orion.Cast('Invisibility')
+        }    
+}
+
+function lightning()
+ {
+    if (Orion.Count('0x1f4a') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek pog');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Lightning')
+        }    
+}
+
+function pcw()
+ {
+    if (Orion.Count('0x1F51') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek pcw');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Mind Blast')
+        }    
+}
+
+function feeblemind()
+ {
+    if (Orion.Count('0x1F30') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek rw');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Feeblemind')
+        }    
+}
+
+function kvf_svitek()
+ {
+    if (Orion.Count('0x1f5f') > 1)
+       { 
+        Orion.WaitTargetObject('cil');              
+        Orion.Say('.svitek kvf');                
+        }
+    else
+        {
+       Orion.Print("DOSLY SVITKY")  
+       Orion.WaitTargetObject('cil');             
+       Orion.Cast('Flame Strike')
+        }    
+}
+
+function info()
+{
+    Orion.Say('_info');
+}
+
+function mass_para()
+{
+    Orion.Say('.svitek vaep');
+}
+
+function mass_poison()
+{
+    Orion.Say('.svitek vin');
+}
+
+function z_kone()
+{
+    Orion.UseObject('self');
+}
+
+function vycuc_many_z_kone()
+{
+    Orion.UseObject('self');
+    Orion.Wait(100);
+    Orion.WaitTargetObject('kun');
+    Orion.Cast('Mana Vampire')
+}
+
+function hide()
+{
+    Orion.Say('_hide');
+}
+
+function resinc()
+{
+    Orion.Say('.resync');
+}
+
+function bandy()
+{
+    Orion.Say('.bandageself');
+    Orion.UseObject('stit');
+    Orion.Terminate('all');
+}
+
+function bandy_se_stitem()
+{
+    Orion.Say('.bandageself');
+    Orion.Wait(300);
+    Orion.Equip('stit');
+    Orion.Terminate('all');
+}
+
+function bandy_se_stitem_a_zbran1()
+{
+    Orion.Say('.bandageself');
+    Orion.Wait(300);
+    Orion.Equip('stit');
+    Orion.Wait(300);
+    Orion.Equip('zbran1');
+    Orion.Terminate('all');
+}
+
+function na_kone()
+{
+    Orion.UseObject('kun');
+}
+
+function oznaceni_kone()
+{
+    Orion.AddObject('kun');
+    Orion.Print("*** Klikni na kone ***");
+}
+
+function oznaceni_cile_na_heal()
+{
+    Orion.AddObject('cil2');
+    Orion.Print("*** Klikni na koho chces dat heal ***");
+}
+
+function target()
+{
+    Orion.ClearHighlightCharacters ([priorityHighlight = false]);
+    Orion.AddObject("cil");
+
+    while (Orion.HaveTarget())
+    {
+        Orion.Wait(100);
+    }
+
+    Orion.ClientLastTarget("cil");
+    Orion.AddHighlightCharacter('lasttarget', '33', [priorityHighlightList=true]); 
+}
+
+function terminate()
+{    
+    Orion.Terminate('all');
+}
+
+function port_domu_z_rb()
+{   
+    Orion.WarMode(false);               
+    Orion.Wait(100); 
+    Orion.PlayMacro('portdomu');
+}
+
+function tracking_player()
+ {
+    if (Player.WarMode(true))
+       {   
+        Orion.WarMode(false);               
+        Orion.Wait(100);     
+        Orion.CancelWaitGump();
+        var Gump;
+            Orion.UseSkill("Tracking");
+            Orion.Wait(400);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(4));              
+        }
+    else
+        {
+        Orion.CancelWaitGump();
+        var Gump;
+            Orion.UseSkill("Tracking");
+            Orion.Wait(400);
+        Gump = Orion.GetLastGump();
+        Gump.Select(Orion.CreateGumpHook(4));
+        }    
+}
+
+function per_tracking_player()
+{
+    while(!Player.Dead())
+    {
+            if (Player.WarMode(true))
+           {   
+            Orion.WarMode(false);               
+            Orion.Wait(100);     
+            Orion.CancelWaitGump();
+            var Gump;
+                Orion.UseSkill("Tracking");
+                Orion.Wait(200);
+            Gump = Orion.GetLastGump();
+            Gump.Select(Orion.CreateGumpHook(4));              
+            }            
+        else
+            {
+            Orion.CancelWaitGump();
+            var Gump;
+                Orion.UseSkill("Tracking");
+                Orion.Wait(200);
+            Gump = Orion.GetLastGump();
+            Gump.Select(Orion.CreateGumpHook(4));
+            }  
+    Orion.Wait(2000);
+    }
+}
+
+function rezani() 
+{
+    if (!Player.Dead()) 
+    {
+           var corpses = Orion.FindType('0x2006', '-1', ground, '', 'usedistance');
+            for (var c = 0; c < corpses.length; c++) 
+            {
+                   Orion.OpenContainer(corpses[c])
+                   Orion.Wait(200);
+                   Orion.WaitTargetObject(corpses[c]);
+                   Orion.UseObject('zbran2');
+                Orion.ResetIgnoreList();
+                Orion.Wait(200);
+                Orion.Ignore(corpses[c]);
+                   Orion.Wait(200);
+            }
+            Orion.Wait(200);
+      }
+}
+
+function autoattack()
+{  
+    Orion.Attack('cil');
+}
+
+function autoattack_a_allkill()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say('all kill');
+    Orion.Wait(500);    
+    Orion.Attack('cil');
+}
+
+function nekro_jen_jedno()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+}
+
+function nekra()
+{
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+    Orion.Wait(1400); 
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+    Orion.Wait(1400);
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+    Orion.Wait(1400);
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+    Orion.Wait(1400);
+    Orion.WaitTargetObject('cil');
+    Orion.Say('Vas Flam Por');
+    Orion.Wait(1400); 
+}
+
+function autotarget()
+{
+    for (var ind = 0; ind < 2; ind++)
+    {
+        var mobileID = Orion.FindType("-1", "-1", "ground", "near|live|ignorefriends|ignoreself", 12, "red|criminal");
+
+        if (mobileID.length != 0)
+        {
+            var enemyObj = Orion.FindObject(mobileID[0]);
+
+            var notoColor;
+
+            if (enemyObj)
+            {
+                switch (enemyObj.Notoriety())
+                {
+                    case 1:
+                        notoColor = 66; // blue
+                        break;
+
+                    case 3:
+                        notoColor = 55; // gray
+                        break;
+
+                    case 6:
+                        notoColor = 33; // red
+                        break;
+
+                    default:
+                        notoColor = 22;
+                }
+
+                Orion.CharPrint(self, notoColor, "" + Orion.RequestName(mobileID[0]) + " " + enemyObj.Hits("%") + "%");
+                Orion.CharPrint(mobileID[0], notoColor, "Target: " + Orion.RequestName(mobileID[0]) + "");                
+            }
+            
+            Orion.ClearHighlightCharacters ([priorityHighlight = false]);
+            Orion.CloseStatusbar("cil")  
+            Orion.AddObject("cil", mobileID);  
+            Orion.SetGlobal("global_enemy", mobileID[0]);
+            Orion.ClientLastTarget(mobileID[0]);
+            Orion.TargetSystemSerial(mobileID[0]); 
+            Orion.ShowStatusbar("cil", 850,744)     
+            Orion.AddHighlightCharacter('lasttarget', '33', [priorityHighlightList=true]);                   
+            Orion.Ignore(mobileID[0]);            
+            return;        
+
+        }
+        else if (ind == 0)
+        {
+            Orion.IgnoreReset();
+        }
+    }
+ 
+    Orion.CharPrint(self, "82", "* Zadny Target *");    
+}
+
+function sber_bavlny()
+{
+    while(!Player.Dead())
+    {
+        var bavlna = Orion.FindType('0x0C4F', '0x0000', 'ground', 'near', '2');
+        for (var c = 0; c < bavlna.length; c++)
+        {
+            var serial = bavlna[c];
+            Orion.UseObject(serial);
+            Orion.Wait(1800);
+        }
+    }
+}
+
+function targetdraka() {
+    Orion.Ignore(self);
+    var target = Orion.FindType("0x02CE", "0x02ED", "ground", "mobile", 10, "gray");
+    if (target.length != 0) {
+        Orion.AddObject("drak", target);
+        Orion.ShowStatusbar("drak", 850,744)
+        Orion.Ignore(target[0]);
+    } else {
+        Orion.IgnoreReset();
+        Orion.Ignore(self);
+        target = Orion.FindType("0x02CE", "0x02ED", "ground", "mobile", 10, "gray");
+        if (target.length != 0) {
+            Orion.AddObject("drak", target); 
+            Orion.ShowStatusbar("drak", 850,744)      
+            Orion.Ignore(target[0]);
+        }
+    }
+}
+
+function drakrozbaleni()
+{
+    var rightHandObj = Orion.ObjAtLayer("RightHand");
+    var leftHandObj = Orion.ObjAtLayer("LeftHand");
+    
+    if (Player.Weight() > Player.MaxWeight() - 1)   
+       {
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");
+       Orion.CharPrint(self, "52", "****! PRETIZENI !****");  
+       Orion.CharPrint(self, "42", "****! PRETIZENI !****");               
+        }
+    else
+        {       
+       Orion.Equip('0x4263F862');
+       Orion.Wait(10);
+       Orion.UseType("0x20D6")
+       Orion.Wait(300);
+       Orion.Say("all come")
+       Orion.Exec('targetdraka');
+       Orion.Wait(500);
+        }    
+        
+    if (rightHandObj)
+    {
+        Orion.Equip(rightHandObj.Serial());
+        Orion.Wait(600);
+    }
+    
+    if (leftHandObj)
+    {
+        Orion.Equip(leftHandObj.Serial());
+        Orion.Wait(600);
+    }
+}
+
+function drakbandy()
+{
+    while(!Player.Dead())
+    {
+            Orion.ClearJournal();
+            Orion.WaitTargetObject('drak');
+            Orion.UseType('0x0E21');
+            Orion.Wait(500);            
+            if (Orion.InJournal("Nepotrebuje vylecit", 'sys')) {
+            Orion.CharPrint(self, "42", "** OK VYPINAM **");
+            Orion.Terminate('drakbandy');  
+            }
+            if (Orion.InJournal("Jdi bliz!", 'sys')) {
+            Orion.CharPrint(self, "42", "****! Jdi blize !****");
+            Orion.Wait(1000); 
+            Orion.Exec('spoustecbandu');
+            }
+            Orion.ClearJournal();
+            while (!Orion.InJournal("podarila", 'sys')) {
+                Orion.Wait(1000);
+            }
+    }
+}
+
+function spoustecbandu(){
+            Orion.Terminate('drakbandy');
+            Orion.Wait(200); 
+            Orion.Exec('drakbandy');
+}
+
+function drakshrink()
+{
+    Orion.CloseStatusbar("drak")  
+    Orion.WaitTargetObject('drak');
+    Orion.Say('.Lektvar Shrink potion');
+}
+
+function Krmenidraka()
+{
+          Orion.MoveItem(Orion.FindType('0x0F8C', '0x0000', backpack)[0], (1 - Orion.Count('0x0F8C', '0x0000', "drak")), "drak");
+                 while (!Orion.InJournal("plnej" , 'sys')) {
+                   Orion.MoveItem(Orion.FindType('0x0F8C', '0x0000', backpack)[0], (1 - Orion.Count('0x0F8C', '0x0000', "drak")), "drak"); 
+                   Orion.Wait(500);
+                 }  
+}
+
+function oznaceni_draka()
+{
+    Orion.AddObject('drak');
+    Orion.Print("*** Klikni na draka ***");
+    Orion.CharPrint(self, "42", "****Klikni na draka****");
+}
+
+function Loot()
+{
+
+    var container = Orion.FindObject("lootsacek");
+    if (!container)
+    {
+        Orion.CharPrint(self, "42", "Oznac loot sacek");
+        Orion.AddObject("lootsacek");
+        Orion.Wait(100);
+        while (Orion.HaveTarget())
+        {
+            Orion.Wait(100);
+        }
+    }
+    
+    var list = Orion.FindList('lootlist', lastcontainer); 
+    for (var i = 0; i < list.length; i++)
+    {      
+       Orion.DragItem(list[i], 0);
+       Orion.Wait(300);
+       Orion.DropDraggedItem("lootsacek");
+       Orion.Wait(600);
+    }  
+
+Orion.CharPrint(self, "72", "--- DOLOCENO ---");        
+Orion.Print('** Loot Dokoncen **');
+}
+
+function taming()
+{ 
+    Orion.AddObject("tamovany");
+    Orion.CharPrint(self, "42", "Koho chces tamovat?");
+    Orion.Print("Koho chces tamovat?");
+
+    while (Orion.HaveTarget())
+    {
+        Orion.Wait(100);
+    }
+
+    Orion.Wait(300);
+          
+    while(!Player.Dead())
+    {       
+            Orion.ClearJournal();        
+            Orion.WaitTargetObject('tamovany');
+            Orion.UseSkill('Animal Taming'); 
+            Orion.WaitJournal('nepodarilo|ochocen|preruseno|zmizel z oci', Orion.Now(), Orion.Now()+80000, 'My|Sys'); 
+            Orion.Wait(500);  
+
+                if (Orion.InJournal('ochocen', 'sys')) {
+                    Orion.CharPrint(self, "42", "****! HOTOVO - VYPINAM !****");
+                    Orion.Wait(1000); 
+                    Orion.Terminate('taming');
+                }  
+                if (Orion.InJournal('preruseno', 'sys')) {
+                    Orion.CharPrint(self, "42", "****! PRERUSENO - VYPINAM !****");
+                    Orion.Wait(1000); 
+                    Orion.Terminate('taming');
+                } 
+                if (Orion.InJournal('zmizel z oci', 'sys')) {
+                    Orion.CharPrint(self, "42", "****! MIMO DOSAH - VYPINAM !****");
+                    Orion.Wait(1000); 
+                    Orion.Terminate('taming');
+                }                 
+    }                  
+}
+
+function tmr()
+{
+
+			if (Orion.Count("0x0F09", "0x0388") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("tmr");  
+            }
+            
+            Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say('.lektvar Total mana refresh potion'); 
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("tmr");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("tmr");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
+
+function inviska()
+ {
+ 	Orion.ClearJournal(); 
+    if (Player.WarMode(true))
+       {  
+            if (Orion.Count("0x0F09", "0x0810") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }
+        
+        Orion.WarMode(false);               
+        Orion.Wait(100);     
+        Orion.Say('.lektvar Invisibility potion');
+        Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }             
+
+  		    Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+        }
+    else
+        {           
+            if (Orion.Count("0x0F09", "0x0810") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }
+               
+   		    Orion.Say('.lektvar Invisibility potion');
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("inviska");  
+            }             
+
+		   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green'); 
+        }    
+}
+
+function reflect()
+{
+
+			if (Orion.Count("0x0E26", "0x07A0") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("reflect");  
+            }
+            
+            Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say('.lektvar reflect potion'); 
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("reflect");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("reflect");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
+
+function gr_cure_lahev()
+ {
+    if (Orion.Count('0x15ff') > 1)
+       {
+        Orion.Say('.jidlo cesnecka');   
+        }
+    else
+        {         
+            if (Orion.Count("0x0F07", "0x0000") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gr_cure_lahev");  
+            } 
+              
+   		    Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say('.lektvar Greater cure potion'); 
+            Orion.Wait(800);  
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "62", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gr_cure_lahev");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gr_cure_lahev");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');
+        }    
+}
+
+function gh_lahev()
+{
+		    if (Orion.Count("0x0F0C", "0x0000") < 1)
+            {
+            Orion.CharPrint(self, "33", "** DOSLY LAHVE **");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gh_lahev");  
+            } 
+
+            Orion.ClearJournal();    
+            Orion.Wait(100);        
+            Orion.Say(".lektvar Greater heal potion");
+            Orion.Wait(800);  
+                      
+                      
+            if (Orion.InJournal("Nepotrebujes", "sys")){
+            Orion.CharPrint(self, "62", "---- Full HP ----");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gh_lahev");  
+            }  
+            
+            if (Orion.InJournal("nemuzes pit", "sys")){
+            Orion.CharPrint(self, "52", "--- Nemuzes pit ---");
+            Orion.ClearJournal(); 
+            Orion.Terminate("gh_lahev");  
+            }             
+
+   Orion.AddDisplayTimer(100, 14900, 'Custom', 'Circle|Bar', 'Lahev', 310, 756, '0x0049', 0, 'green');      
+}
