@@ -1,3 +1,6 @@
+//Vytvoril Surround 2021
+//Vytvorené a odskúšané na sharde Kelevar.cz
+
 function track_animal()
  {
     if (Player.WarMode(true))
